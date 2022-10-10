@@ -1,4 +1,4 @@
-package com.yzdev.mobiletest.presentation
+package com.yzdev.mobiletest
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
