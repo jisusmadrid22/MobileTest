@@ -1,12 +1,14 @@
 package com.yzdev.mobiletest
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yzdev.mobiletest.data.dataSource.DbDataSource
 import com.yzdev.mobiletest.data.repository.UiStatus
 import com.yzdev.mobiletest.domain.model.NoticeResponse
+import com.yzdev.mobiletest.domain.model.entities.ArchivedNotices
 import com.yzdev.mobiletest.domain.model.entities.NoticeEntity
 import com.yzdev.mobiletest.domain.repository.NoticeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +25,7 @@ class MainViewModel @Inject constructor(
 
     private val noticeApi = mutableStateOf<UiStatus<List<NoticeEntity>>>(UiStatus.Default())
     val notice = noticeRepositoryImp.getNoticeListDb().map { if (it.isEmpty()) UiStatus.Loading() else UiStatus.Success(it) }
+    val archive = noticeRepositoryImp.getArchivedList()
 
     fun getNoticeApi(){
         Log.d("NOTICE", "GET")
@@ -38,10 +41,12 @@ class MainViewModel @Inject constructor(
                             NoticeEntity(
                                 title = it.story_title ?: it.title ?: "",
                                 author = it.author,
-                                createdAt = it.created_at
+                                createdAt = it.created_at,
+                                story_id = it.story_id.toString()
                             )
                         }
                     )
+
                     database.noticeDao().deleteNotice()
                     delay(1000)
                     database.noticeDao().insertNotice(
@@ -49,7 +54,8 @@ class MainViewModel @Inject constructor(
                             NoticeEntity(
                                 title = it.story_title ?: it.title ?: "",
                                 author = it.author,
-                                createdAt = it.created_at
+                                createdAt = it.created_at,
+                                story_id = it.story_id.toString()
                             )
                         }
                     )
@@ -67,6 +73,20 @@ class MainViewModel @Inject constructor(
                 noticeApi.value = UiStatus.Failure("Error")
                 Log.d("NOTICE", "Catch")
             }*/
+        }
+    }
+
+    fun deleteNotice(noticeEntity: NoticeEntity){
+        viewModelScope.launch {
+            database.noticeDao().insetArchived(
+                ArchivedNotices(
+                    noticeEntity.id,
+                    noticeEntity.title,
+                    noticeEntity.author,
+                    noticeEntity.createdAt,
+                    noticeEntity.story_id
+                )
+            )
         }
     }
 }

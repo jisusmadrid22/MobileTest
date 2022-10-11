@@ -43,6 +43,7 @@ fun NoticeLayout(
     )
     val scope = rememberCoroutineScope()
     val notice by mainViewModel.notice.collectAsState(initial = UiStatus.Loading())
+    val archive by mainViewModel.archive.collectAsState(initial = emptyList())
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -58,9 +59,6 @@ fun NoticeLayout(
         }
     ) {
         when(notice){
-            is UiStatus.Default -> {
-
-            }
             is UiStatus.Failure -> {
                 Text(text = "ERROR -> ${notice.message} ${notice.get}")
             }
@@ -92,64 +90,66 @@ fun NoticeLayout(
                     }
                     items(notice.get ?: emptyList(), key = {it.id}){item->
 
-                        val dismissState = rememberDismissState(
-                            confirmStateChange = {
-                                if (it == DismissValue.DismissedToStart){
-                                    //todo remove
-                                }
-                                true
-                            }
-                        )
-
-                        SwipeToDismiss(
-                            state = dismissState,
-                            background = {
-                                val direction = dismissState.dismissDirection ?: return@SwipeToDismiss
-
-                                val color by animateColorAsState(
-                                    targetValue = when(dismissState.targetValue){
-                                        DismissValue.Default -> Color.LightGray
-                                        DismissValue.DismissedToStart -> Color.Red
-                                        else -> MaterialTheme.colors.background
+                        if(archive.find { it.story_id == item.story_id } == null){
+                            val dismissState = rememberDismissState(
+                                confirmStateChange = {
+                                    if (it == DismissValue.DismissedToStart){
+                                        mainViewModel.deleteNotice(item)
                                     }
-                                )
-
-                                val icon = when(direction){
-                                    DismissDirection.EndToStart -> Icons.Rounded.Delete
-                                    else -> Icons.Rounded.Delete
+                                    true
                                 }
+                            )
 
-                                val scale by animateFloatAsState(
-                                    targetValue = if(dismissState.targetValue == DismissValue.Default) 0.8f else 1.2f
-                                )
+                            SwipeToDismiss(
+                                state = dismissState,
+                                background = {
+                                    val direction = dismissState.dismissDirection ?: return@SwipeToDismiss
 
-                                val alignment = when(direction){
-                                    DismissDirection.EndToStart -> Alignment.CenterEnd
-                                    else-> Alignment.CenterEnd
-                                }
-
-                                Box(
-                                    modifier = Modifier
-                                        .fillParentMaxSize()
-                                        .padding(horizontal = 12.dp)
-                                        .background(color),
-                                    contentAlignment = alignment
-                                ){
-                                    Icon(
-                                        modifier = Modifier.scale(scale),
-                                        imageVector = icon,
-                                        contentDescription = "Delete Icon"
+                                    val color by animateColorAsState(
+                                        targetValue = when(dismissState.targetValue){
+                                            DismissValue.Default -> Color.LightGray
+                                            DismissValue.DismissedToStart -> Color.Red
+                                            else -> MaterialTheme.colors.background
+                                        }
                                     )
-                                }
 
-                            },
-                            directions = setOf(DismissDirection.EndToStart)
-                        ) {
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                elevation = animateDpAsState(targetValue = if (dismissState.dismissDirection != null) 4.dp else 0.dp).value
+                                    val icon = when(direction){
+                                        DismissDirection.EndToStart -> Icons.Rounded.Delete
+                                        else -> Icons.Rounded.Delete
+                                    }
+
+                                    val scale by animateFloatAsState(
+                                        targetValue = if(dismissState.targetValue == DismissValue.Default) 0.8f else 1.2f
+                                    )
+
+                                    val alignment = when(direction){
+                                        DismissDirection.EndToStart -> Alignment.CenterEnd
+                                        else-> Alignment.CenterEnd
+                                    }
+
+                                    Box(
+                                        modifier = Modifier
+                                            .fillParentMaxSize()
+                                            .padding(horizontal = 12.dp)
+                                            .background(color),
+                                        contentAlignment = alignment
+                                    ){
+                                        Icon(
+                                            modifier = Modifier.scale(scale),
+                                            imageVector = icon,
+                                            contentDescription = "Delete Icon"
+                                        )
+                                    }
+
+                                },
+                                directions = setOf(DismissDirection.EndToStart)
                             ) {
-                                ItemNoticeList(item = item.title)
+                                Card(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    elevation = animateDpAsState(targetValue = if (dismissState.dismissDirection != null) 4.dp else 0.dp).value
+                                ) {
+                                    ItemNoticeList(item = item.title)
+                                }
                             }
                         }
                     }

@@ -8,5 +8,6 @@ data class NoticeEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val title: String,
     val author: String,
-    val createdAt: String
+    val createdAt: String,
+    val story_id: String
 )

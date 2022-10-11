@@ -34,17 +34,19 @@ public final class DbDataSource_Impl extends DbDataSource {
 
   @Override
   protected SupportSQLiteOpenHelper createOpenHelper(DatabaseConfiguration configuration) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(1) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(2) {
       @Override
       public void createAllTables(SupportSQLiteDatabase _db) {
-        _db.execSQL("CREATE TABLE IF NOT EXISTS `NoticeTable` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `author` TEXT NOT NULL, `createdAt` TEXT NOT NULL)");
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `NoticeTable` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `author` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `story_id` TEXT NOT NULL)");
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `ArchivedNotices` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `author` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `story_id` TEXT NOT NULL)");
         _db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c8be2f7230ed80a8440bc1600e37a5f8')");
+        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7395079214957c04d863f619ab5f1b70')");
       }
 
       @Override
       public void dropAllTables(SupportSQLiteDatabase _db) {
         _db.execSQL("DROP TABLE IF EXISTS `NoticeTable`");
+        _db.execSQL("DROP TABLE IF EXISTS `ArchivedNotices`");
         if (mCallbacks != null) {
           for (int _i = 0, _size = mCallbacks.size(); _i < _size; _i++) {
             mCallbacks.get(_i).onDestructiveMigration(_db);
@@ -83,11 +85,12 @@ public final class DbDataSource_Impl extends DbDataSource {
 
       @Override
       protected RoomOpenHelper.ValidationResult onValidateSchema(SupportSQLiteDatabase _db) {
-        final HashMap<String, TableInfo.Column> _columnsNoticeTable = new HashMap<String, TableInfo.Column>(4);
+        final HashMap<String, TableInfo.Column> _columnsNoticeTable = new HashMap<String, TableInfo.Column>(5);
         _columnsNoticeTable.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsNoticeTable.put("title", new TableInfo.Column("title", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsNoticeTable.put("author", new TableInfo.Column("author", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsNoticeTable.put("createdAt", new TableInfo.Column("createdAt", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsNoticeTable.put("story_id", new TableInfo.Column("story_id", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysNoticeTable = new HashSet<TableInfo.ForeignKey>(0);
         final HashSet<TableInfo.Index> _indicesNoticeTable = new HashSet<TableInfo.Index>(0);
         final TableInfo _infoNoticeTable = new TableInfo("NoticeTable", _columnsNoticeTable, _foreignKeysNoticeTable, _indicesNoticeTable);
@@ -97,9 +100,24 @@ public final class DbDataSource_Impl extends DbDataSource {
                   + " Expected:\n" + _infoNoticeTable + "\n"
                   + " Found:\n" + _existingNoticeTable);
         }
+        final HashMap<String, TableInfo.Column> _columnsArchivedNotices = new HashMap<String, TableInfo.Column>(5);
+        _columnsArchivedNotices.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsArchivedNotices.put("title", new TableInfo.Column("title", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsArchivedNotices.put("author", new TableInfo.Column("author", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsArchivedNotices.put("createdAt", new TableInfo.Column("createdAt", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsArchivedNotices.put("story_id", new TableInfo.Column("story_id", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysArchivedNotices = new HashSet<TableInfo.ForeignKey>(0);
+        final HashSet<TableInfo.Index> _indicesArchivedNotices = new HashSet<TableInfo.Index>(0);
+        final TableInfo _infoArchivedNotices = new TableInfo("ArchivedNotices", _columnsArchivedNotices, _foreignKeysArchivedNotices, _indicesArchivedNotices);
+        final TableInfo _existingArchivedNotices = TableInfo.read(_db, "ArchivedNotices");
+        if (! _infoArchivedNotices.equals(_existingArchivedNotices)) {
+          return new RoomOpenHelper.ValidationResult(false, "ArchivedNotices(com.yzdev.mobiletest.domain.model.entities.ArchivedNotices).\n"
+                  + " Expected:\n" + _infoArchivedNotices + "\n"
+                  + " Found:\n" + _existingArchivedNotices);
+        }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "c8be2f7230ed80a8440bc1600e37a5f8", "55efea2c89ec9bcc0dfda5f3da44aa8a");
+    }, "7395079214957c04d863f619ab5f1b70", "016447bc86a52fd447f9e7bd37431e5a");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(configuration.context)
         .name(configuration.name)
         .callback(_openCallback)
@@ -112,7 +130,7 @@ public final class DbDataSource_Impl extends DbDataSource {
   protected InvalidationTracker createInvalidationTracker() {
     final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
     HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
-    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "NoticeTable");
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "NoticeTable","ArchivedNotices");
   }
 
   @Override
@@ -122,6 +140,7 @@ public final class DbDataSource_Impl extends DbDataSource {
     try {
       super.beginTransaction();
       _db.execSQL("DELETE FROM `NoticeTable`");
+      _db.execSQL("DELETE FROM `ArchivedNotices`");
       super.setTransactionSuccessful();
     } finally {
       super.endTransaction();

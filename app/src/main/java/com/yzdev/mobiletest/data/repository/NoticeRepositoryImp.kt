@@ -3,6 +3,7 @@ package com.yzdev.mobiletest.data.repository
 import com.yzdev.mobiletest.data.dataSource.NoticeDao
 import com.yzdev.mobiletest.data.dataSource.RestDataSource
 import com.yzdev.mobiletest.domain.model.NoticeResponse
+import com.yzdev.mobiletest.domain.model.entities.ArchivedNotices
 import com.yzdev.mobiletest.domain.model.entities.NoticeEntity
 import com.yzdev.mobiletest.domain.repository.NoticeRepository
 import kotlinx.coroutines.flow.Flow
@@ -32,11 +33,15 @@ class NoticeRepositoryImp @Inject constructor(
         return noticeDao.getAllNotice()
     }
 
-    override suspend fun getNoticeDb(id: Int): NoticeEntity {
+    override suspend fun getNoticeDb(id: Int): NoticeEntity? {
         return noticeDao.getNotice(id = id)
     }
 
     override suspend fun deleteNotice() {
         noticeDao.deleteNotice()
+    }
+
+    override fun getArchivedList(): Flow<List<ArchivedNotices>> {
+        return noticeDao.getAllArchived()
     }
 }
