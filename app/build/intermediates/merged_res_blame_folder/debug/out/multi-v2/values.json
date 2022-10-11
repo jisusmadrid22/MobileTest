@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.yzdev.mobiletest.app-mergeDebugResources-43:/values/values.xml",
+            "outputFile": "com.yzdev.mobiletest.app-mergeDebugResources-47:/values/values.xml",
             "map": [
                 {
                     "source": "C:\\Users\\51928\\.gradle\\caches\\transforms-3\\57de44d2dade00a2787bdd358da21704\\transformed\\fragment-1.3.2\\res\\values\\values.xml",

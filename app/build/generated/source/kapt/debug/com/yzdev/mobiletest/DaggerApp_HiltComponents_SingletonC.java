@@ -7,13 +7,13 @@ import android.view.View;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
-import com.yzdev.mobiletest.data.NoticeRepositoryImp;
-import com.yzdev.mobiletest.dataSource.RestDataSource;
+import com.yzdev.mobiletest.data.dataSource.RestDataSource;
+import com.yzdev.mobiletest.data.repository.NoticeRepositoryImp;
 import com.yzdev.mobiletest.di.DataSourceModule;
 import com.yzdev.mobiletest.di.DataSourceModule_ProvideBaseUrlFactory;
 import com.yzdev.mobiletest.di.DataSourceModule_ProvideRetrofitFactory;
 import com.yzdev.mobiletest.di.DataSourceModule_RestDataSourceFactory;
-import com.yzdev.mobiletest.repository.NoticeRepository;
+import com.yzdev.mobiletest.domain.repository.NoticeRepository;
 import dagger.hilt.android.ActivityRetainedLifecycle;
 import dagger.hilt.android.internal.builders.ActivityComponentBuilder;
 import dagger.hilt.android.internal.builders.ActivityRetainedComponentBuilder;
@@ -400,7 +400,7 @@ public final class DaggerApp_HiltComponents_SingletonC extends App_HiltComponent
     }
 
     @Override
-    public void injectMainActivity(MainActivity arg0) {
+    public void injectMainActivity(MainActivity mainActivity) {
     }
 
     @Override
@@ -574,10 +574,10 @@ public final class DaggerApp_HiltComponents_SingletonC extends App_HiltComponent
     @Override
     public T get() {
       switch (id) {
-        case 0: // com.yzdev.mobiletest.data.NoticeRepositoryImp 
+        case 0: // com.yzdev.mobiletest.data.repository.NoticeRepositoryImp 
         return (T) singletonC.noticeRepositoryImp();
 
-        case 1: // com.yzdev.mobiletest.dataSource.RestDataSource 
+        case 1: // com.yzdev.mobiletest.data.dataSource.RestDataSource 
         return (T) singletonC.restDataSource();
 
         case 2: // retrofit2.Retrofit 

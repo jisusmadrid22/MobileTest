@@ -2,8 +2,7 @@ package com.yzdev.mobiletest
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.yzdev.mobiletest.data.NoticeRepositoryImp
-import com.yzdev.mobiletest.repository.NoticeRepository
+import com.yzdev.mobiletest.domain.repository.NoticeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -14,7 +13,7 @@ class MainViewModel @Inject constructor(
 
     suspend fun getNotice(){
         Log.d("NoticeList", "get list")
-        val notice = noticeRepositoryImp.getNoticeList()
+        val notice = noticeRepositoryImp.getNoticeListApi()
         Log.d("NoticeList", notice.hits.first().created_at)
     }
 }

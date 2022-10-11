@@ -1,13 +1,17 @@
 package com.yzdev.mobiletest.di
 
-import com.yzdev.mobiletest.dataSource.RestDataSource
+import android.content.Context
+import androidx.room.Room
+import com.yzdev.mobiletest.data.dataSource.DbDataSource
+import com.yzdev.mobiletest.data.dataSource.NoticeDao
+import com.yzdev.mobiletest.data.dataSource.RestDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -32,4 +36,18 @@ class DataSourceModule {
     @Singleton
     @Provides
     fun restDataSource(retrofit: Retrofit): RestDataSource = retrofit.create(RestDataSource::class.java)
+
+    @Singleton
+    @Provides
+    fun dbDataSource(@ApplicationContext context: Context): DbDataSource{
+        return Room.databaseBuilder(context, DbDataSource::class.java, "notice_dataBase")
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun noticeDao(
+        db: DbDataSource
+    ): NoticeDao = db.noticeDao()
 }

@@ -1,10 +1,9 @@
 package com.yzdev.mobiletest.di
 
-import com.yzdev.mobiletest.data.NoticeRepositoryImp
-import com.yzdev.mobiletest.repository.NoticeRepository
+import com.yzdev.mobiletest.data.repository.NoticeRepositoryImp
+import com.yzdev.mobiletest.domain.repository.NoticeRepository
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
