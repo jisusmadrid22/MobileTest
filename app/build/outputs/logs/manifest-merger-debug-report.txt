@@ -4,6 +4,7 @@ ADDED from C:\Users\51928\AndroidStudioProjects\MobileTest\app\src\main\AndroidM
 INJECTED from C:\Users\51928\AndroidStudioProjects\MobileTest\app\src\main\AndroidManifest.xml:2:1-33:12
 INJECTED from C:\Users\51928\AndroidStudioProjects\MobileTest\app\src\main\AndroidManifest.xml:2:1-33:12
 INJECTED from C:\Users\51928\AndroidStudioProjects\MobileTest\app\src\main\AndroidManifest.xml:2:1-33:12
+MERGED from [com.google.accompanist:accompanist-swiperefresh:0.20.2] C:\Users\51928\.gradle\caches\transforms-3\3728a988dea3624f4dffd07a296be98d\transformed\accompanist-swiperefresh-0.20.2\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.compose.ui:ui-tooling:1.1.0-beta01] C:\Users\51928\.gradle\caches\transforms-3\e4796750b24ab7fcd3cefe883bbde418\transformed\ui-tooling-1.1.0-beta01\AndroidManifest.xml:17:1-30:12
 MERGED from [androidx.compose.material:material:1.1.0-beta01] C:\Users\51928\.gradle\caches\transforms-3\b693253e18cfafdcc39a2d11dce3a15e\transformed\material-1.1.0-beta01\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.hilt:hilt-navigation-compose:1.0.0] C:\Users\51928\.gradle\caches\transforms-3\a6a4e7a3606da3aba0cd369fa9f9dcf6\transformed\hilt-navigation-compose-1.0.0\AndroidManifest.xml:17:1-24:12
@@ -150,6 +151,8 @@ uses-sdk
 INJECTED from C:\Users\51928\AndroidStudioProjects\MobileTest\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\51928\AndroidStudioProjects\MobileTest\app\src\main\AndroidManifest.xml
 INJECTED from C:\Users\51928\AndroidStudioProjects\MobileTest\app\src\main\AndroidManifest.xml
+MERGED from [com.google.accompanist:accompanist-swiperefresh:0.20.2] C:\Users\51928\.gradle\caches\transforms-3\3728a988dea3624f4dffd07a296be98d\transformed\accompanist-swiperefresh-0.20.2\AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.accompanist:accompanist-swiperefresh:0.20.2] C:\Users\51928\.gradle\caches\transforms-3\3728a988dea3624f4dffd07a296be98d\transformed\accompanist-swiperefresh-0.20.2\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.compose.ui:ui-tooling:1.1.0-beta01] C:\Users\51928\.gradle\caches\transforms-3\e4796750b24ab7fcd3cefe883bbde418\transformed\ui-tooling-1.1.0-beta01\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.compose.ui:ui-tooling:1.1.0-beta01] C:\Users\51928\.gradle\caches\transforms-3\e4796750b24ab7fcd3cefe883bbde418\transformed\ui-tooling-1.1.0-beta01\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.compose.material:material:1.1.0-beta01] C:\Users\51928\.gradle\caches\transforms-3\b693253e18cfafdcc39a2d11dce3a15e\transformed\material-1.1.0-beta01\AndroidManifest.xml:20:5-22:41

@@ -29,7 +29,6 @@ class MainViewModel @Inject constructor(
 
     fun getNoticeApi(){
         Log.d("NOTICE", "GET")
-        if (noticeApi.value is UiStatus.Loading ){ return}
         if (noticeApi.value !is UiStatus.Success){ noticeApi.value = UiStatus.Loading()}
 
         viewModelScope.launch {
