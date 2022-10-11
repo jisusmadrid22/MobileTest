@@ -14,7 +14,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -150,9 +149,12 @@ fun NoticeLayout(
                                 ) {
                                     Card(
                                         modifier = Modifier.fillMaxWidth(),
-                                        elevation = animateDpAsState(targetValue = if (dismissState.dismissDirection != null) 4.dp else 0.dp).value
+                                        elevation = 0.dp,
+                                        onClick = {
+
+                                        }
                                     ) {
-                                        ItemNoticeList(item = item.title)
+                                        ItemNoticeList(item = item)
                                     }
                                 }
                             }
