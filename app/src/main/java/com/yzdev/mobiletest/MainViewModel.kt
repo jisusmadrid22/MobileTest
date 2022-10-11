@@ -13,7 +13,8 @@ class MainViewModel @Inject constructor(
 ): ViewModel() {
 
     suspend fun getNotice(){
+        Log.d("NoticeList", "get list")
         val notice = noticeRepositoryImp.getNoticeList()
-        Log.d("NoticeList", notice.toString())
+        Log.d("NoticeList", notice.hits.first().created_at)
     }
 }

@@ -5,7 +5,14 @@ int animator fragment_fade_enter 0x7f020002
 int animator fragment_fade_exit 0x7f020003
 int animator fragment_open_enter 0x7f020004
 int animator fragment_open_exit 0x7f020005
+int attr action 0x7f030011
 int attr alpha 0x7f030000
+int attr argType 0x7f030012
+int attr data 0x7f030013
+int attr dataPattern 0x7f030014
+int attr destination 0x7f030015
+int attr enterAnim 0x7f030016
+int attr exitAnim 0x7f030017
 int attr font 0x7f030001
 int attr fontProviderAuthority 0x7f030002
 int attr fontProviderCerts 0x7f030003
@@ -17,11 +24,26 @@ int attr fontProviderSystemFontFamily 0x7f030008
 int attr fontStyle 0x7f030009
 int attr fontVariationSettings 0x7f03000a
 int attr fontWeight 0x7f03000b
+int attr graph 0x7f030018
 int attr lStar 0x7f03000c
+int attr launchSingleTop 0x7f030019
+int attr mimeType 0x7f03001a
+int attr navGraph 0x7f03001b
 int attr nestedScrollViewStyle 0x7f03000d
+int attr nullable 0x7f03001c
+int attr popEnterAnim 0x7f03001d
+int attr popExitAnim 0x7f03001e
+int attr popUpTo 0x7f03001f
+int attr popUpToInclusive 0x7f030020
+int attr popUpToSaveState 0x7f030021
 int attr queryPatterns 0x7f03000e
+int attr restoreState 0x7f030022
+int attr route 0x7f030023
 int attr shortcutMatchRequired 0x7f03000f
+int attr startDestination 0x7f030024
+int attr targetPackage 0x7f030025
 int attr ttcIndex 0x7f030010
+int attr uri 0x7f030026
 int color androidx_core_ripple_material_light 0x7f040000
 int color androidx_core_secondary_text_default_material_light 0x7f040001
 int color black 0x7f040002
@@ -130,6 +152,7 @@ int id item3 0x7f070036
 int id item4 0x7f070037
 int id line1 0x7f070038
 int id line3 0x7f070039
+int id nav_controller_view_tag 0x7f070057
 int id normal 0x7f07003a
 int id notification_background 0x7f07003b
 int id notification_main_column 0x7f07003c
@@ -197,6 +220,12 @@ int style TextAppearance_Compat_Notification_Title 0x7f0d0005
 int style Theme_MobileTest 0x7f0d0006
 int style Widget_Compat_NotificationActionContainer 0x7f0d0007
 int style Widget_Compat_NotificationActionText 0x7f0d0008
+int[] styleable ActivityNavigator { 0x01010003, 0x7f030011, 0x7f030013, 0x7f030014, 0x7f030025 }
+int styleable ActivityNavigator_android_name 0
+int styleable ActivityNavigator_action 1
+int styleable ActivityNavigator_data 2
+int styleable ActivityNavigator_dataPattern 3
+int styleable ActivityNavigator_targetPackage 4
 int[] styleable Capability { 0x7f03000e, 0x7f03000f }
 int styleable Capability_queryPatterns 0
 int styleable Capability_shortcutMatchRequired 1
@@ -248,5 +277,37 @@ int styleable GradientColor_android_endY 11
 int[] styleable GradientColorItem { 0x010101a5, 0x01010514 }
 int styleable GradientColorItem_android_color 0
 int styleable GradientColorItem_android_offset 1
+int[] styleable NavAction { 0x010100d0, 0x7f030015, 0x7f030016, 0x7f030017, 0x7f030019, 0x7f03001d, 0x7f03001e, 0x7f03001f, 0x7f030020, 0x7f030021, 0x7f030022 }
+int styleable NavAction_android_id 0
+int styleable NavAction_destination 1
+int styleable NavAction_enterAnim 2
+int styleable NavAction_exitAnim 3
+int styleable NavAction_launchSingleTop 4
+int styleable NavAction_popEnterAnim 5
+int styleable NavAction_popExitAnim 6
+int styleable NavAction_popUpTo 7
+int styleable NavAction_popUpToInclusive 8
+int styleable NavAction_popUpToSaveState 9
+int styleable NavAction_restoreState 10
+int[] styleable NavArgument { 0x01010003, 0x010101ed, 0x7f030012, 0x7f03001c }
+int styleable NavArgument_android_name 0
+int styleable NavArgument_android_defaultValue 1
+int styleable NavArgument_argType 2
+int styleable NavArgument_nullable 3
+int[] styleable NavDeepLink { 0x010104ee, 0x7f030011, 0x7f03001a, 0x7f030026 }
+int styleable NavDeepLink_android_autoVerify 0
+int styleable NavDeepLink_action 1
+int styleable NavDeepLink_mimeType 2
+int styleable NavDeepLink_uri 3
+int[] styleable NavGraphNavigator { 0x7f030024 }
+int styleable NavGraphNavigator_startDestination 0
+int[] styleable NavHost { 0x7f03001b }
+int styleable NavHost_navGraph 0
+int[] styleable NavInclude { 0x7f030018 }
+int styleable NavInclude_graph 0
+int[] styleable Navigator { 0x01010001, 0x010100d0, 0x7f030023 }
+int styleable Navigator_android_label 0
+int styleable Navigator_android_id 1
+int styleable Navigator_route 2
 int xml backup_rules 0x7f0f0000
 int xml data_extraction_rules 0x7f0f0001

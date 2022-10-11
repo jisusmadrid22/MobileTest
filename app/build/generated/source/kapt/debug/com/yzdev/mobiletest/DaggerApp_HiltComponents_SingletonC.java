@@ -7,6 +7,13 @@ import android.view.View;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
+import com.yzdev.mobiletest.data.NoticeRepositoryImp;
+import com.yzdev.mobiletest.dataSource.RestDataSource;
+import com.yzdev.mobiletest.di.DataSourceModule;
+import com.yzdev.mobiletest.di.DataSourceModule_ProvideBaseUrlFactory;
+import com.yzdev.mobiletest.di.DataSourceModule_ProvideRetrofitFactory;
+import com.yzdev.mobiletest.di.DataSourceModule_RestDataSourceFactory;
+import com.yzdev.mobiletest.repository.NoticeRepository;
 import dagger.hilt.android.ActivityRetainedLifecycle;
 import dagger.hilt.android.internal.builders.ActivityComponentBuilder;
 import dagger.hilt.android.internal.builders.ActivityRetainedComponentBuilder;
@@ -27,6 +34,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Provider;
+import retrofit2.Retrofit;
 
 @DaggerGenerated
 @SuppressWarnings({
@@ -36,16 +44,53 @@ import javax.inject.Provider;
 public final class DaggerApp_HiltComponents_SingletonC extends App_HiltComponents.SingletonC {
   private final ApplicationContextModule applicationContextModule;
 
+  private final DataSourceModule dataSourceModule;
+
   private final DaggerApp_HiltComponents_SingletonC singletonC = this;
 
+  private Provider<String> provideBaseUrlProvider;
+
+  private Provider<Retrofit> provideRetrofitProvider;
+
+  private Provider<RestDataSource> restDataSourceProvider;
+
+  private Provider<NoticeRepositoryImp> noticeRepositoryImpProvider;
+
+  private Provider<NoticeRepository> noticeRepositoryProvider;
+
   private DaggerApp_HiltComponents_SingletonC(
-      ApplicationContextModule applicationContextModuleParam) {
+      ApplicationContextModule applicationContextModuleParam,
+      DataSourceModule dataSourceModuleParam) {
     this.applicationContextModule = applicationContextModuleParam;
+    this.dataSourceModule = dataSourceModuleParam;
+    initialize(applicationContextModuleParam, dataSourceModuleParam);
 
   }
 
   public static Builder builder() {
     return new Builder();
+  }
+
+  private Retrofit retrofit() {
+    return DataSourceModule_ProvideRetrofitFactory.provideRetrofit(dataSourceModule, provideBaseUrlProvider.get());
+  }
+
+  private RestDataSource restDataSource() {
+    return DataSourceModule_RestDataSourceFactory.restDataSource(dataSourceModule, provideRetrofitProvider.get());
+  }
+
+  private NoticeRepositoryImp noticeRepositoryImp() {
+    return new NoticeRepositoryImp(restDataSourceProvider.get());
+  }
+
+  @SuppressWarnings("unchecked")
+  private void initialize(final ApplicationContextModule applicationContextModuleParam,
+      final DataSourceModule dataSourceModuleParam) {
+    this.provideBaseUrlProvider = DoubleCheck.provider(new SwitchingProvider<String>(singletonC, 3));
+    this.provideRetrofitProvider = DoubleCheck.provider(new SwitchingProvider<Retrofit>(singletonC, 2));
+    this.restDataSourceProvider = DoubleCheck.provider(new SwitchingProvider<RestDataSource>(singletonC, 1));
+    this.noticeRepositoryImpProvider = new SwitchingProvider<>(singletonC, 0);
+    this.noticeRepositoryProvider = DoubleCheck.provider((Provider) noticeRepositoryImpProvider);
   }
 
   @Override
@@ -65,6 +110,8 @@ public final class DaggerApp_HiltComponents_SingletonC extends App_HiltComponent
   public static final class Builder {
     private ApplicationContextModule applicationContextModule;
 
+    private DataSourceModule dataSourceModule;
+
     private Builder() {
     }
 
@@ -73,9 +120,17 @@ public final class DaggerApp_HiltComponents_SingletonC extends App_HiltComponent
       return this;
     }
 
+    public Builder dataSourceModule(DataSourceModule dataSourceModule) {
+      this.dataSourceModule = Preconditions.checkNotNull(dataSourceModule);
+      return this;
+    }
+
     public App_HiltComponents.SingletonC build() {
       Preconditions.checkBuilderRequirement(applicationContextModule, ApplicationContextModule.class);
-      return new DaggerApp_HiltComponents_SingletonC(applicationContextModule);
+      if (dataSourceModule == null) {
+        this.dataSourceModule = new DataSourceModule();
+      }
+      return new DaggerApp_HiltComponents_SingletonC(applicationContextModule, dataSourceModule);
     }
   }
 
@@ -345,13 +400,17 @@ public final class DaggerApp_HiltComponents_SingletonC extends App_HiltComponent
     }
 
     @Override
+    public void injectMainActivity(MainActivity arg0) {
+    }
+
+    @Override
     public DefaultViewModelFactories.InternalFactoryFactory getHiltInternalFactoryFactory() {
-      return DefaultViewModelFactories_InternalFactoryFactory_Factory.newInstance(ApplicationContextModule_ProvideApplicationFactory.provideApplication(singletonC.applicationContextModule), Collections.<String>emptySet(), new ViewModelCBuilder(singletonC, activityRetainedCImpl));
+      return DefaultViewModelFactories_InternalFactoryFactory_Factory.newInstance(ApplicationContextModule_ProvideApplicationFactory.provideApplication(singletonC.applicationContextModule), getViewModelKeys(), new ViewModelCBuilder(singletonC, activityRetainedCImpl));
     }
 
     @Override
     public Set<String> getViewModelKeys() {
-      return Collections.<String>emptySet();
+      return Collections.<String>singleton(MainViewModel_HiltModules_KeyModule_ProvideFactory.provide());
     }
 
     @Override
@@ -377,17 +436,58 @@ public final class DaggerApp_HiltComponents_SingletonC extends App_HiltComponent
 
     private final ViewModelCImpl viewModelCImpl = this;
 
+    private Provider<MainViewModel> mainViewModelProvider;
+
     private ViewModelCImpl(DaggerApp_HiltComponents_SingletonC singletonC,
         ActivityRetainedCImpl activityRetainedCImpl, SavedStateHandle savedStateHandleParam) {
       this.singletonC = singletonC;
       this.activityRetainedCImpl = activityRetainedCImpl;
 
+      initialize(savedStateHandleParam);
 
+    }
+
+    private MainViewModel mainViewModel() {
+      return new MainViewModel(singletonC.noticeRepositoryProvider.get());
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initialize(final SavedStateHandle savedStateHandleParam) {
+      this.mainViewModelProvider = new SwitchingProvider<>(singletonC, activityRetainedCImpl, viewModelCImpl, 0);
     }
 
     @Override
     public Map<String, Provider<ViewModel>> getHiltViewModelMap() {
-      return Collections.<String, Provider<ViewModel>>emptyMap();
+      return Collections.<String, Provider<ViewModel>>singletonMap("com.yzdev.mobiletest.MainViewModel", (Provider) mainViewModelProvider);
+    }
+
+    private static final class SwitchingProvider<T> implements Provider<T> {
+      private final DaggerApp_HiltComponents_SingletonC singletonC;
+
+      private final ActivityRetainedCImpl activityRetainedCImpl;
+
+      private final ViewModelCImpl viewModelCImpl;
+
+      private final int id;
+
+      SwitchingProvider(DaggerApp_HiltComponents_SingletonC singletonC,
+          ActivityRetainedCImpl activityRetainedCImpl, ViewModelCImpl viewModelCImpl, int id) {
+        this.singletonC = singletonC;
+        this.activityRetainedCImpl = activityRetainedCImpl;
+        this.viewModelCImpl = viewModelCImpl;
+        this.id = id;
+      }
+
+      @SuppressWarnings("unchecked")
+      @Override
+      public T get() {
+        switch (id) {
+          case 0: // com.yzdev.mobiletest.MainViewModel 
+          return (T) viewModelCImpl.mainViewModel();
+
+          default: throw new AssertionError(id);
+        }
+      }
     }
   }
 
@@ -457,6 +557,37 @@ public final class DaggerApp_HiltComponents_SingletonC extends App_HiltComponent
       this.singletonC = singletonC;
 
 
+    }
+  }
+
+  private static final class SwitchingProvider<T> implements Provider<T> {
+    private final DaggerApp_HiltComponents_SingletonC singletonC;
+
+    private final int id;
+
+    SwitchingProvider(DaggerApp_HiltComponents_SingletonC singletonC, int id) {
+      this.singletonC = singletonC;
+      this.id = id;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public T get() {
+      switch (id) {
+        case 0: // com.yzdev.mobiletest.data.NoticeRepositoryImp 
+        return (T) singletonC.noticeRepositoryImp();
+
+        case 1: // com.yzdev.mobiletest.dataSource.RestDataSource 
+        return (T) singletonC.restDataSource();
+
+        case 2: // retrofit2.Retrofit 
+        return (T) singletonC.retrofit();
+
+        case 3: // @javax.inject.Named("BaseUrl") java.lang.String 
+        return (T) DataSourceModule_ProvideBaseUrlFactory.provideBaseUrl(singletonC.dataSourceModule);
+
+        default: throw new AssertionError(id);
+      }
     }
   }
 }

@@ -1,5 +1,8 @@
 package com.yzdev.mobiletest;
 
+import androidx.hilt.lifecycle.ViewModelFactoryModules;
+import com.yzdev.mobiletest.di.DataSourceModule;
+import com.yzdev.mobiletest.di.RepositoryModule;
 import dagger.Binds;
 import dagger.Component;
 import dagger.Module;
@@ -114,7 +117,9 @@ public final class App_HiltComponents {
       modules = {
           ActivityRetainedCBuilderModule.class,
           ServiceCBuilderModule.class,
-          ApplicationContextModule.class
+          ApplicationContextModule.class,
+          DataSourceModule.class,
+          RepositoryModule.class
       }
   )
   @Singleton
@@ -138,7 +143,8 @@ public final class App_HiltComponents {
       modules = {
           ActivityCBuilderModule.class,
           ViewModelCBuilderModule.class,
-          HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class
+          HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
+          MainViewModel_HiltModules.KeyModule.class
       }
   )
   @ActivityRetainedScoped
@@ -156,11 +162,13 @@ public final class App_HiltComponents {
           FragmentCBuilderModule.class,
           ViewCBuilderModule.class,
           HiltWrapper_ActivityModule.class,
-          HiltWrapper_DefaultViewModelFactories_ActivityModule.class
+          HiltWrapper_DefaultViewModelFactories_ActivityModule.class,
+          ViewModelFactoryModules.ActivityModule.class
       }
   )
   @ActivityScoped
-  public abstract static class ActivityC implements ActivityComponent,
+  public abstract static class ActivityC implements MainActivity_GeneratedInjector,
+      ActivityComponent,
       DefaultViewModelFactories.ActivityEntryPoint,
       HiltWrapper_HiltViewModelFactory_ActivityCreatorEntryPoint,
       FragmentComponentManager.FragmentComponentBuilderEntryPoint,
@@ -172,7 +180,10 @@ public final class App_HiltComponents {
   }
 
   @Subcomponent(
-      modules = HiltWrapper_HiltViewModelFactory_ViewModelModule.class
+      modules = {
+          HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
+          MainViewModel_HiltModules.BindsModule.class
+      }
   )
   @ViewModelScoped
   public abstract static class ViewModelC implements ViewModelComponent,
@@ -193,7 +204,10 @@ public final class App_HiltComponents {
   }
 
   @Subcomponent(
-      modules = ViewWithFragmentCBuilderModule.class
+      modules = {
+          ViewWithFragmentCBuilderModule.class,
+          ViewModelFactoryModules.FragmentModule.class
+      }
   )
   @FragmentScoped
   public abstract static class FragmentC implements FragmentComponent,

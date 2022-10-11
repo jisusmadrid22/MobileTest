@@ -13,24 +13,25 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.yzdev.mobiletest.MainViewModel
 import com.yzdev.mobiletest.presentation.composable.itemListDesign.noticeItemList.ItemNoticeList
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NoticeLayout(
-
+    mainViewModel: MainViewModel = hiltViewModel()
 ) {
 
+    val scope = rememberCoroutineScope()
     val list = remember {
         mutableStateListOf<NoticeList>(
             NoticeList(
@@ -71,6 +72,17 @@ fun NoticeLayout(
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ){
+        item{
+            Button(
+                onClick = {
+                    scope.launch {
+                        mainViewModel.getNotice()
+                    }
+                }
+            ) {
+                Text(text = "click")
+            }
+        }
         items(list, key = {it.id}){item->
 
             val dismissState = rememberDismissState(
