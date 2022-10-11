@@ -7,9 +7,13 @@ import android.view.View;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
+import com.yzdev.mobiletest.data.dataSource.DbDataSource;
+import com.yzdev.mobiletest.data.dataSource.NoticeDao;
 import com.yzdev.mobiletest.data.dataSource.RestDataSource;
 import com.yzdev.mobiletest.data.repository.NoticeRepositoryImp;
 import com.yzdev.mobiletest.di.DataSourceModule;
+import com.yzdev.mobiletest.di.DataSourceModule_DbDataSourceFactory;
+import com.yzdev.mobiletest.di.DataSourceModule_NoticeDaoFactory;
 import com.yzdev.mobiletest.di.DataSourceModule_ProvideBaseUrlFactory;
 import com.yzdev.mobiletest.di.DataSourceModule_ProvideRetrofitFactory;
 import com.yzdev.mobiletest.di.DataSourceModule_RestDataSourceFactory;
@@ -27,6 +31,7 @@ import dagger.hilt.android.internal.lifecycle.DefaultViewModelFactories_Internal
 import dagger.hilt.android.internal.managers.ActivityRetainedComponentManager_Lifecycle_Factory;
 import dagger.hilt.android.internal.modules.ApplicationContextModule;
 import dagger.hilt.android.internal.modules.ApplicationContextModule_ProvideApplicationFactory;
+import dagger.hilt.android.internal.modules.ApplicationContextModule_ProvideContextFactory;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.DoubleCheck;
 import dagger.internal.Preconditions;
@@ -54,6 +59,10 @@ public final class DaggerApp_HiltComponents_SingletonC extends App_HiltComponent
 
   private Provider<RestDataSource> restDataSourceProvider;
 
+  private Provider<DbDataSource> dbDataSourceProvider;
+
+  private Provider<NoticeDao> noticeDaoProvider;
+
   private Provider<NoticeRepositoryImp> noticeRepositoryImpProvider;
 
   private Provider<NoticeRepository> noticeRepositoryProvider;
@@ -79,8 +88,16 @@ public final class DaggerApp_HiltComponents_SingletonC extends App_HiltComponent
     return DataSourceModule_RestDataSourceFactory.restDataSource(dataSourceModule, provideRetrofitProvider.get());
   }
 
+  private DbDataSource dbDataSource() {
+    return DataSourceModule_DbDataSourceFactory.dbDataSource(dataSourceModule, ApplicationContextModule_ProvideContextFactory.provideContext(applicationContextModule));
+  }
+
+  private NoticeDao noticeDao() {
+    return DataSourceModule_NoticeDaoFactory.noticeDao(dataSourceModule, dbDataSourceProvider.get());
+  }
+
   private NoticeRepositoryImp noticeRepositoryImp() {
-    return new NoticeRepositoryImp(restDataSourceProvider.get());
+    return new NoticeRepositoryImp(restDataSourceProvider.get(), noticeDaoProvider.get());
   }
 
   @SuppressWarnings("unchecked")
@@ -89,6 +106,8 @@ public final class DaggerApp_HiltComponents_SingletonC extends App_HiltComponent
     this.provideBaseUrlProvider = DoubleCheck.provider(new SwitchingProvider<String>(singletonC, 3));
     this.provideRetrofitProvider = DoubleCheck.provider(new SwitchingProvider<Retrofit>(singletonC, 2));
     this.restDataSourceProvider = DoubleCheck.provider(new SwitchingProvider<RestDataSource>(singletonC, 1));
+    this.dbDataSourceProvider = DoubleCheck.provider(new SwitchingProvider<DbDataSource>(singletonC, 5));
+    this.noticeDaoProvider = DoubleCheck.provider(new SwitchingProvider<NoticeDao>(singletonC, 4));
     this.noticeRepositoryImpProvider = new SwitchingProvider<>(singletonC, 0);
     this.noticeRepositoryProvider = DoubleCheck.provider((Provider) noticeRepositoryImpProvider);
   }
@@ -448,7 +467,7 @@ public final class DaggerApp_HiltComponents_SingletonC extends App_HiltComponent
     }
 
     private MainViewModel mainViewModel() {
-      return new MainViewModel(singletonC.noticeRepositoryProvider.get());
+      return new MainViewModel(singletonC.noticeRepositoryProvider.get(), singletonC.dbDataSourceProvider.get());
     }
 
     @SuppressWarnings("unchecked")
@@ -585,6 +604,12 @@ public final class DaggerApp_HiltComponents_SingletonC extends App_HiltComponent
 
         case 3: // @javax.inject.Named("BaseUrl") java.lang.String 
         return (T) DataSourceModule_ProvideBaseUrlFactory.provideBaseUrl(singletonC.dataSourceModule);
+
+        case 4: // com.yzdev.mobiletest.data.dataSource.NoticeDao 
+        return (T) singletonC.noticeDao();
+
+        case 5: // com.yzdev.mobiletest.data.dataSource.DbDataSource 
+        return (T) singletonC.dbDataSource();
 
         default: throw new AssertionError(id);
       }

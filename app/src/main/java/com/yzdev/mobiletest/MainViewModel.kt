@@ -10,6 +10,8 @@ import com.yzdev.mobiletest.domain.model.NoticeResponse
 import com.yzdev.mobiletest.domain.model.entities.NoticeEntity
 import com.yzdev.mobiletest.domain.repository.NoticeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,8 +22,10 @@ class MainViewModel @Inject constructor(
 ): ViewModel() {
 
     private val noticeApi = mutableStateOf<UiStatus<List<NoticeEntity>>>(UiStatus.Default())
+    val notice = noticeRepositoryImp.getNoticeListDb().map { if (it.isEmpty()) UiStatus.Loading() else UiStatus.Success(it) }
 
     fun getNoticeApi(){
+        Log.d("NOTICE", "GET")
         if (noticeApi.value is UiStatus.Loading ){ return}
         if (noticeApi.value !is UiStatus.Success){ noticeApi.value = UiStatus.Loading()}
 
@@ -38,6 +42,8 @@ class MainViewModel @Inject constructor(
                             )
                         }
                     )
+                    database.noticeDao().deleteNotice()
+                    delay(1000)
                     database.noticeDao().insertNotice(
                         response.hits.map {
                             NoticeEntity(
@@ -50,9 +56,17 @@ class MainViewModel @Inject constructor(
                 }else{
                     noticeApi.value = UiStatus.Failure("Error")
                 }
+                Log.d("NOTICE", "Success no catch GET")
             }catch (e: Exception){
                 noticeApi.value = UiStatus.Failure("Error")
+                Log.d("NOTICE", "Catch")
             }
+            /*try {
+
+            }catch (e: Exception){
+                noticeApi.value = UiStatus.Failure("Error")
+                Log.d("NOTICE", "Catch")
+            }*/
         }
     }
 }

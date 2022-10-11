@@ -13,24 +13,30 @@ class NoticeRepositoryImp @Inject constructor(
     private val noticeDao: NoticeDao
 ): NoticeRepository {
     override suspend fun getNoticeListApi(): NoticeResponse {
-        val notice = dataSource.getNotice()
+
+        /*noticeDao.deleteNotice()
+        delay(1000)
         noticeDao.insertNotice(
-            notice.hits.map {
+            noticeApi.hits.map {
                 NoticeEntity(
                     title = it.story_title ?: it.title ?: "",
                     author = it.author,
                     createdAt = it.created_at
                 )
             }
-        )
-        return notice
+        )*/
+        return dataSource.getNotice()
     }
 
-    override suspend fun getNoticeListDb(): Flow<List<NoticeEntity>> {
+    override fun getNoticeListDb(): Flow<List<NoticeEntity>> {
         return noticeDao.getAllNotice()
     }
 
     override suspend fun getNoticeDb(id: Int): NoticeEntity {
         return noticeDao.getNotice(id = id)
+    }
+
+    override suspend fun deleteNotice() {
+        noticeDao.deleteNotice()
     }
 }

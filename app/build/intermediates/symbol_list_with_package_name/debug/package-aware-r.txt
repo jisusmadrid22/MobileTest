@@ -212,6 +212,7 @@ string selected
 string status_bar_notification_info_overflow
 string tab
 string template_percent
+string titleApp
 style DialogWindowTheme
 style TextAppearance_Compat_Notification
 style TextAppearance_Compat_Notification_Info
