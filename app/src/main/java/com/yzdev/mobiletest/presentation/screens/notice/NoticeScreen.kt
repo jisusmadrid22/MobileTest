@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.yzdev.mobiletest.MainViewModel
@@ -28,13 +29,15 @@ import com.yzdev.mobiletest.R
 import com.yzdev.mobiletest.data.repository.UiStatus
 import com.yzdev.mobiletest.presentation.composable.itemListDesign.noticeItemList.ItemNoticeList
 import com.yzdev.mobiletest.presentation.composable.shimmerEffect.AnimatedShimmerTwoLines
+import com.yzdev.mobiletest.presentation.navigation.Destination
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NoticeLayout(
-    mainViewModel: MainViewModel = hiltViewModel()
+    mainViewModel: MainViewModel = hiltViewModel(),
+    navHostController: NavHostController
 ) {
 
     LaunchedEffect(
@@ -151,7 +154,7 @@ fun NoticeLayout(
                                         modifier = Modifier.fillMaxWidth(),
                                         elevation = 0.dp,
                                         onClick = {
-
+                                            navHostController.navigate(Destination.DETAIL_NOTICE.screenRoute + "/${item.id}")
                                         }
                                     ) {
                                         ItemNoticeList(item = item)

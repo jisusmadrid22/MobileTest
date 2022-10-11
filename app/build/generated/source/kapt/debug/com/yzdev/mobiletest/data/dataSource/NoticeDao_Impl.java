@@ -43,7 +43,7 @@ public final class NoticeDao_Impl implements NoticeDao {
     this.__insertionAdapterOfNoticeEntity = new EntityInsertionAdapter<NoticeEntity>(__db) {
       @Override
       public String createQuery() {
-        return "INSERT OR REPLACE INTO `NoticeTable` (`id`,`title`,`author`,`createdAt`,`story_id`) VALUES (nullif(?, 0),?,?,?,?)";
+        return "INSERT OR REPLACE INTO `NoticeTable` (`id`,`title`,`author`,`createdAt`,`story_id`,`url`) VALUES (nullif(?, 0),?,?,?,?,?)";
       }
 
       @Override
@@ -69,12 +69,17 @@ public final class NoticeDao_Impl implements NoticeDao {
         } else {
           stmt.bindString(5, value.getStory_id());
         }
+        if (value.getUrl() == null) {
+          stmt.bindNull(6);
+        } else {
+          stmt.bindString(6, value.getUrl());
+        }
       }
     };
     this.__insertionAdapterOfArchivedNotices = new EntityInsertionAdapter<ArchivedNotices>(__db) {
       @Override
       public String createQuery() {
-        return "INSERT OR REPLACE INTO `ArchivedNotices` (`id`,`title`,`author`,`createdAt`,`story_id`) VALUES (nullif(?, 0),?,?,?,?)";
+        return "INSERT OR REPLACE INTO `ArchivedNotices` (`id`,`title`,`author`,`createdAt`,`story_id`,`url`) VALUES (nullif(?, 0),?,?,?,?,?)";
       }
 
       @Override
@@ -99,6 +104,11 @@ public final class NoticeDao_Impl implements NoticeDao {
           stmt.bindNull(5);
         } else {
           stmt.bindString(5, value.getStory_id());
+        }
+        if (value.getUrl() == null) {
+          stmt.bindNull(6);
+        } else {
+          stmt.bindString(6, value.getUrl());
         }
       }
     };
@@ -208,6 +218,7 @@ public final class NoticeDao_Impl implements NoticeDao {
           final int _cursorIndexOfAuthor = CursorUtil.getColumnIndexOrThrow(_cursor, "author");
           final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final int _cursorIndexOfStoryId = CursorUtil.getColumnIndexOrThrow(_cursor, "story_id");
+          final int _cursorIndexOfUrl = CursorUtil.getColumnIndexOrThrow(_cursor, "url");
           final List<NoticeEntity> _result = new ArrayList<NoticeEntity>(_cursor.getCount());
           while(_cursor.moveToNext()) {
             final NoticeEntity _item;
@@ -237,7 +248,13 @@ public final class NoticeDao_Impl implements NoticeDao {
             } else {
               _tmpStory_id = _cursor.getString(_cursorIndexOfStoryId);
             }
-            _item = new NoticeEntity(_tmpId,_tmpTitle,_tmpAuthor,_tmpCreatedAt,_tmpStory_id);
+            final String _tmpUrl;
+            if (_cursor.isNull(_cursorIndexOfUrl)) {
+              _tmpUrl = null;
+            } else {
+              _tmpUrl = _cursor.getString(_cursorIndexOfUrl);
+            }
+            _item = new NoticeEntity(_tmpId,_tmpTitle,_tmpAuthor,_tmpCreatedAt,_tmpStory_id,_tmpUrl);
             _result.add(_item);
           }
           return _result;
@@ -254,56 +271,68 @@ public final class NoticeDao_Impl implements NoticeDao {
   }
 
   @Override
-  public NoticeEntity getNotice(final int id) {
+  public Object getNotice(final int id, final Continuation<? super NoticeEntity> continuation) {
     final String _sql = "SELECT * FROM NoticeTable WHERE id = ?";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
     _statement.bindLong(_argIndex, id);
-    __db.assertNotSuspendingTransaction();
-    final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
-    try {
-      final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
-      final int _cursorIndexOfTitle = CursorUtil.getColumnIndexOrThrow(_cursor, "title");
-      final int _cursorIndexOfAuthor = CursorUtil.getColumnIndexOrThrow(_cursor, "author");
-      final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
-      final int _cursorIndexOfStoryId = CursorUtil.getColumnIndexOrThrow(_cursor, "story_id");
-      final NoticeEntity _result;
-      if(_cursor.moveToFirst()) {
-        final int _tmpId;
-        _tmpId = _cursor.getInt(_cursorIndexOfId);
-        final String _tmpTitle;
-        if (_cursor.isNull(_cursorIndexOfTitle)) {
-          _tmpTitle = null;
-        } else {
-          _tmpTitle = _cursor.getString(_cursorIndexOfTitle);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<NoticeEntity>() {
+      @Override
+      public NoticeEntity call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfTitle = CursorUtil.getColumnIndexOrThrow(_cursor, "title");
+          final int _cursorIndexOfAuthor = CursorUtil.getColumnIndexOrThrow(_cursor, "author");
+          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
+          final int _cursorIndexOfStoryId = CursorUtil.getColumnIndexOrThrow(_cursor, "story_id");
+          final int _cursorIndexOfUrl = CursorUtil.getColumnIndexOrThrow(_cursor, "url");
+          final NoticeEntity _result;
+          if(_cursor.moveToFirst()) {
+            final int _tmpId;
+            _tmpId = _cursor.getInt(_cursorIndexOfId);
+            final String _tmpTitle;
+            if (_cursor.isNull(_cursorIndexOfTitle)) {
+              _tmpTitle = null;
+            } else {
+              _tmpTitle = _cursor.getString(_cursorIndexOfTitle);
+            }
+            final String _tmpAuthor;
+            if (_cursor.isNull(_cursorIndexOfAuthor)) {
+              _tmpAuthor = null;
+            } else {
+              _tmpAuthor = _cursor.getString(_cursorIndexOfAuthor);
+            }
+            final String _tmpCreatedAt;
+            if (_cursor.isNull(_cursorIndexOfCreatedAt)) {
+              _tmpCreatedAt = null;
+            } else {
+              _tmpCreatedAt = _cursor.getString(_cursorIndexOfCreatedAt);
+            }
+            final String _tmpStory_id;
+            if (_cursor.isNull(_cursorIndexOfStoryId)) {
+              _tmpStory_id = null;
+            } else {
+              _tmpStory_id = _cursor.getString(_cursorIndexOfStoryId);
+            }
+            final String _tmpUrl;
+            if (_cursor.isNull(_cursorIndexOfUrl)) {
+              _tmpUrl = null;
+            } else {
+              _tmpUrl = _cursor.getString(_cursorIndexOfUrl);
+            }
+            _result = new NoticeEntity(_tmpId,_tmpTitle,_tmpAuthor,_tmpCreatedAt,_tmpStory_id,_tmpUrl);
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
         }
-        final String _tmpAuthor;
-        if (_cursor.isNull(_cursorIndexOfAuthor)) {
-          _tmpAuthor = null;
-        } else {
-          _tmpAuthor = _cursor.getString(_cursorIndexOfAuthor);
-        }
-        final String _tmpCreatedAt;
-        if (_cursor.isNull(_cursorIndexOfCreatedAt)) {
-          _tmpCreatedAt = null;
-        } else {
-          _tmpCreatedAt = _cursor.getString(_cursorIndexOfCreatedAt);
-        }
-        final String _tmpStory_id;
-        if (_cursor.isNull(_cursorIndexOfStoryId)) {
-          _tmpStory_id = null;
-        } else {
-          _tmpStory_id = _cursor.getString(_cursorIndexOfStoryId);
-        }
-        _result = new NoticeEntity(_tmpId,_tmpTitle,_tmpAuthor,_tmpCreatedAt,_tmpStory_id);
-      } else {
-        _result = null;
       }
-      return _result;
-    } finally {
-      _cursor.close();
-      _statement.release();
-    }
+    }, continuation);
   }
 
   @Override
@@ -323,6 +352,7 @@ public final class NoticeDao_Impl implements NoticeDao {
           final int _cursorIndexOfAuthor = CursorUtil.getColumnIndexOrThrow(_cursor, "author");
           final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final int _cursorIndexOfStoryId = CursorUtil.getColumnIndexOrThrow(_cursor, "story_id");
+          final int _cursorIndexOfUrl = CursorUtil.getColumnIndexOrThrow(_cursor, "url");
           final ArchivedNotices _result;
           if(_cursor.moveToFirst()) {
             final int _tmpId;
@@ -351,7 +381,13 @@ public final class NoticeDao_Impl implements NoticeDao {
             } else {
               _tmpStory_id = _cursor.getString(_cursorIndexOfStoryId);
             }
-            _result = new ArchivedNotices(_tmpId,_tmpTitle,_tmpAuthor,_tmpCreatedAt,_tmpStory_id);
+            final String _tmpUrl;
+            if (_cursor.isNull(_cursorIndexOfUrl)) {
+              _tmpUrl = null;
+            } else {
+              _tmpUrl = _cursor.getString(_cursorIndexOfUrl);
+            }
+            _result = new ArchivedNotices(_tmpId,_tmpTitle,_tmpAuthor,_tmpCreatedAt,_tmpStory_id,_tmpUrl);
           } else {
             _result = null;
           }
@@ -378,6 +414,7 @@ public final class NoticeDao_Impl implements NoticeDao {
           final int _cursorIndexOfAuthor = CursorUtil.getColumnIndexOrThrow(_cursor, "author");
           final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAt");
           final int _cursorIndexOfStoryId = CursorUtil.getColumnIndexOrThrow(_cursor, "story_id");
+          final int _cursorIndexOfUrl = CursorUtil.getColumnIndexOrThrow(_cursor, "url");
           final List<ArchivedNotices> _result = new ArrayList<ArchivedNotices>(_cursor.getCount());
           while(_cursor.moveToNext()) {
             final ArchivedNotices _item;
@@ -407,7 +444,13 @@ public final class NoticeDao_Impl implements NoticeDao {
             } else {
               _tmpStory_id = _cursor.getString(_cursorIndexOfStoryId);
             }
-            _item = new ArchivedNotices(_tmpId,_tmpTitle,_tmpAuthor,_tmpCreatedAt,_tmpStory_id);
+            final String _tmpUrl;
+            if (_cursor.isNull(_cursorIndexOfUrl)) {
+              _tmpUrl = null;
+            } else {
+              _tmpUrl = _cursor.getString(_cursorIndexOfUrl);
+            }
+            _item = new ArchivedNotices(_tmpId,_tmpTitle,_tmpAuthor,_tmpCreatedAt,_tmpStory_id,_tmpUrl);
             _result.add(_item);
           }
           return _result;

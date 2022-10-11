@@ -41,7 +41,8 @@ class MainViewModel @Inject constructor(
                                 title = it.story_title ?: it.title ?: "",
                                 author = it.author,
                                 createdAt = it.created_at,
-                                story_id = it.story_id.toString()
+                                story_id = it.story_id.toString(),
+                                url = it.story_url ?: it.url ?: ""
                             )
                         }
                     )
@@ -54,7 +55,8 @@ class MainViewModel @Inject constructor(
                                 title = it.story_title ?: it.title ?: "",
                                 author = it.author,
                                 createdAt = it.created_at,
-                                story_id = it.story_id.toString()
+                                story_id = it.story_id.toString(),
+                                url = it.story_url ?: it.url ?: ""
                             )
                         }
                     )
@@ -83,9 +85,14 @@ class MainViewModel @Inject constructor(
                     noticeEntity.title,
                     noticeEntity.author,
                     noticeEntity.createdAt,
-                    noticeEntity.story_id
+                    noticeEntity.story_id,
+                    noticeEntity.url
                 )
             )
         }
+    }
+
+    suspend fun getNoticeById(id: Int): NoticeEntity?{
+        return database.noticeDao().getNotice(id)
     }
 }

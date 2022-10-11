@@ -19,7 +19,7 @@ interface NoticeDao {
     fun getAllNotice(): Flow<List<NoticeEntity>>
 
     @Query("SELECT * FROM NoticeTable WHERE id = :id")
-    fun getNotice(id: Int): NoticeEntity?
+    suspend fun getNotice(id: Int): NoticeEntity?
 
     @Query("DELETE FROM NoticeTable")
     suspend fun deleteNotice()

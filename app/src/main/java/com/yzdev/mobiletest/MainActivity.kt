@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.yzdev.mobiletest.presentation.navigation.Navigation
 import com.yzdev.mobiletest.presentation.screens.notice.NoticeLayout
 import com.yzdev.mobiletest.presentation.ui.theme.MobileTestTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +25,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    NoticeLayout()
+                    Navigation()
                 }
             }
         }

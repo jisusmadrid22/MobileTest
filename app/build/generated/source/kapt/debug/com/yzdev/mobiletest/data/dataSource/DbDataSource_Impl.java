@@ -37,10 +37,10 @@ public final class DbDataSource_Impl extends DbDataSource {
     final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(2) {
       @Override
       public void createAllTables(SupportSQLiteDatabase _db) {
-        _db.execSQL("CREATE TABLE IF NOT EXISTS `NoticeTable` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `author` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `story_id` TEXT NOT NULL)");
-        _db.execSQL("CREATE TABLE IF NOT EXISTS `ArchivedNotices` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `author` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `story_id` TEXT NOT NULL)");
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `NoticeTable` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `author` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `story_id` TEXT NOT NULL, `url` TEXT NOT NULL)");
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `ArchivedNotices` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `author` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `story_id` TEXT NOT NULL, `url` TEXT NOT NULL)");
         _db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7395079214957c04d863f619ab5f1b70')");
+        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '62cd81a9e68c7bfd3b06a1f8245c153e')");
       }
 
       @Override
@@ -85,12 +85,13 @@ public final class DbDataSource_Impl extends DbDataSource {
 
       @Override
       protected RoomOpenHelper.ValidationResult onValidateSchema(SupportSQLiteDatabase _db) {
-        final HashMap<String, TableInfo.Column> _columnsNoticeTable = new HashMap<String, TableInfo.Column>(5);
+        final HashMap<String, TableInfo.Column> _columnsNoticeTable = new HashMap<String, TableInfo.Column>(6);
         _columnsNoticeTable.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsNoticeTable.put("title", new TableInfo.Column("title", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsNoticeTable.put("author", new TableInfo.Column("author", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsNoticeTable.put("createdAt", new TableInfo.Column("createdAt", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsNoticeTable.put("story_id", new TableInfo.Column("story_id", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsNoticeTable.put("url", new TableInfo.Column("url", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysNoticeTable = new HashSet<TableInfo.ForeignKey>(0);
         final HashSet<TableInfo.Index> _indicesNoticeTable = new HashSet<TableInfo.Index>(0);
         final TableInfo _infoNoticeTable = new TableInfo("NoticeTable", _columnsNoticeTable, _foreignKeysNoticeTable, _indicesNoticeTable);
@@ -100,12 +101,13 @@ public final class DbDataSource_Impl extends DbDataSource {
                   + " Expected:\n" + _infoNoticeTable + "\n"
                   + " Found:\n" + _existingNoticeTable);
         }
-        final HashMap<String, TableInfo.Column> _columnsArchivedNotices = new HashMap<String, TableInfo.Column>(5);
+        final HashMap<String, TableInfo.Column> _columnsArchivedNotices = new HashMap<String, TableInfo.Column>(6);
         _columnsArchivedNotices.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsArchivedNotices.put("title", new TableInfo.Column("title", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsArchivedNotices.put("author", new TableInfo.Column("author", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsArchivedNotices.put("createdAt", new TableInfo.Column("createdAt", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsArchivedNotices.put("story_id", new TableInfo.Column("story_id", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsArchivedNotices.put("url", new TableInfo.Column("url", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysArchivedNotices = new HashSet<TableInfo.ForeignKey>(0);
         final HashSet<TableInfo.Index> _indicesArchivedNotices = new HashSet<TableInfo.Index>(0);
         final TableInfo _infoArchivedNotices = new TableInfo("ArchivedNotices", _columnsArchivedNotices, _foreignKeysArchivedNotices, _indicesArchivedNotices);
@@ -117,7 +119,7 @@ public final class DbDataSource_Impl extends DbDataSource {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "7395079214957c04d863f619ab5f1b70", "016447bc86a52fd447f9e7bd37431e5a");
+    }, "62cd81a9e68c7bfd3b06a1f8245c153e", "9b0a6961e52d39e6ec8d148c4851d024");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(configuration.context)
         .name(configuration.name)
         .callback(_openCallback)
