@@ -12,6 +12,7 @@ drawable ic_launcher_foreground
 mipmap ic_launcher
 mipmap ic_launcher_round
 string app_name
+string internetError
 string titleApp
 style Theme.MobileTest
 xml backup_rules

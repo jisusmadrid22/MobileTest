@@ -15,11 +15,17 @@ interface NoticeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNotice(noticeList: List<NoticeEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertUniqueNotice(noticeList: NoticeEntity)
+
     @Query("SELECT * FROM NoticeTable")
     fun getAllNotice(): Flow<List<NoticeEntity>>
 
     @Query("SELECT * FROM NoticeTable WHERE id = :id")
     suspend fun getNotice(id: Int): NoticeEntity?
+
+    @Query("SELECT * FROM NoticeTable WHERE story_id = :code")
+    suspend fun getNoticeByCode(code: String): NoticeEntity?
 
     @Query("DELETE FROM NoticeTable")
     suspend fun deleteNotice()

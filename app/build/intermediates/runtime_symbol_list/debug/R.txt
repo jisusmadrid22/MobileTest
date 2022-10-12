@@ -203,6 +203,7 @@ int string default_popup_window_title 0x7f0c0005
 int string dropdown_menu 0x7f0c0006
 int string in_progress 0x7f0c0007
 int string indeterminate 0x7f0c0008
+int string internetError 0x7f0c0012
 int string navigation_menu 0x7f0c0009
 int string not_selected 0x7f0c000a
 int string off 0x7f0c000b
